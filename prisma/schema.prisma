@@ -1,0 +1,28 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+model Order {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items         String   // JSON string representation of the order items
+  shippingInfo  String   // JSON string representation of the shipping info
+  paymentInfo   String   // JSON string representation of the payment info
+  totalAmount   Float
+  status        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String?
+  image   String?
+  orders  Order[]
+}
